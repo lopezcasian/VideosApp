@@ -33,9 +33,16 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
+                        <form class="navbar-form navbar-left" role="search" action="">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Search.." name="search" />
+                                <button type="submit" class="btn btn-default">
+                                    Search
+                                </button>
+                            </div>
+                        </form>
                     </ul>
-
+                    
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
@@ -49,11 +56,13 @@
                                 @endif
                             </li>
                         @else
+                            <li class="nav-item">
+                                <a href="#">Upload video</a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
-
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
