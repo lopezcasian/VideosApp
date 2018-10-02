@@ -4,7 +4,7 @@
 	<div class="container">
 		<h2>Create new video</h2>
 		<div class="row">
-			<form action="{{ route('saveVideo') }}" method="POST" ectype="multipart/form-data" class="col-lg-7">
+			<form action="{{ route('saveVideo') }}" method="POST" enctype="multipart/form-data" class="col-lg-7">
 				{!! csrf_field() !!}
 
 				@if($errors->any())
