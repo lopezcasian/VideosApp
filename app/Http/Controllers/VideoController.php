@@ -59,4 +59,9 @@ class VideoController extends Controller
     			'message' => 'The video has been uploaded successfully.'
     		));
     }
+
+    public function getImage($filename){
+    	$file = Storage::disk('images')->get($filename);
+    	return new Response($file, 200);
+    }
 }
