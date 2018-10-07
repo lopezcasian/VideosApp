@@ -34,13 +34,11 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                        <form class="navbar-form navbar-left" role="search" action="">
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Search.." name="search" />
-                                <button type="submit" class="btn btn-default">
-                                    Search
-                                </button>
-                            </div>
+                        <form class="form-inline" role="search" action="">
+                            <input type="text" class="form-control mr-sm-2" placeholder="Search.." name="search" />
+                            <button type="submit" class="btn btn-default">
+                                Search
+                            </button>
                         </form>
                     </ul>
                     
@@ -58,7 +56,7 @@
                             </li>
                         @else
                             <li class="nav-item">
-                                <a href="{{ route('createVideo') }}">Upload video</a>
+                                <a class="nav-link" href="{{ route('createVideo') }}">Upload video</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -85,6 +83,11 @@
         <main class="py-4">
             @yield('content')
         </main>
+
+        <footer class="col-md-10 offset-md-1">
+            <hr />
+            <p>Videos Laravel 2018</p>
+        </footer>
     </div>
 </body>
 </html>

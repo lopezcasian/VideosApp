@@ -47,3 +47,21 @@ Route::get('/video-file/{filename}', array(
 		'as' => 'fileVideo',
 		'uses' => 'VideoController@getVideo'
 	));
+
+Route::post('/comment', [
+		'as' => 'comment',
+		'middleware' => 'auth',
+		'uses' => 'CommentController@store'
+	]);
+
+Route::get('/delete-comment/{comment_id}', [
+		'as' => 'commentDelete',
+		'middleware' => 'auth',
+		'uses' => 'CommentController@delete'
+	]);
+
+Route::get('/delete-video/{video-id}', array(
+		'as' => 'videoDelete',
+		'middleware' => 'auth',
+		'uses' => 'VideoController@delete'
+	));

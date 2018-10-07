@@ -30,7 +30,28 @@
                         <a class="btn btn-success btn-sm" href="">See</a>
                         @if(Auth::check() && Auth::user()->id == $video->user->id)
                             <a class="btn btn-warning btn-sm" href="">Edit</a>
-                            <a class="btn btn-danger btn-sm" href="">Delete</a>
+                            <a href="#videoModal{{$video->id}}" role="button" class="btn btn-danger" data-toggle="modal">Delete</a>
+                            
+                            <div id="videoModal{{$video->id}}" class="modal fade">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Delete video</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Do you want to delete this video?</p>
+                                            <p><small>{{ $video->title }}</small></p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <a href="{{ url('/delete-video/'. $video->id) }}" type="button" class="btn btn-danger">Eliminar</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         @endif
 
                     </div>

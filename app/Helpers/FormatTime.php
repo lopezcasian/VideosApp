@@ -5,7 +5,7 @@ class FormatTime {
  
     public static function LongTimeFilter($date) {
         if ($date == null) {
-            return "Sin fecha";
+            return "Without date.";
         }
  
         $start_date = $date;

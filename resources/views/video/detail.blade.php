@@ -24,12 +24,10 @@
                     {{ $video->description }}
                 </div>
             </div>
-
+            <br />
             <!-- Comments -->
+            @include('video.comments')
 
     	</div>
     </div>
-
-
-
 @endsection
