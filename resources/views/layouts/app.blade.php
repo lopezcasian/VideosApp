@@ -86,7 +86,7 @@
 
         <footer class="col-md-10 offset-md-1">
             <hr />
-            <p>Videos Laravel 2018</p>
+            <p>Video company 2018</p>
         </footer>
     </div>
 </body>

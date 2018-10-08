@@ -62,7 +62,7 @@ class VideoController extends Controller
 
     public function getImage($filename){
     	$file = Storage::disk('images')->get($filename);
-    	return new Response();
+    	return new Response($file, 200);
     }
 
     public function getVideoDetail($video_id){
