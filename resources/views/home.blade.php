@@ -27,10 +27,10 @@
                             <p>{{ $video->user->name . ' ' . $video->user->surname }}</p>
                         </div>
                         <!-- Action buttons -->
-                        <a class="btn btn-success btn-sm" href="">See</a>
+                        <a class="btn btn-success btn-sm" href="{{ route('detailVideo', ['video_id' => $video->id]) }}">See</a>
                         @if(Auth::check() && Auth::user()->id == $video->user->id)
                             <a class="btn btn-warning btn-sm" href="">Edit</a>
-                            <a href="#videoModal{{$video->id}}" role="button" class="btn btn-danger" data-toggle="modal">Delete</a>
+                            <a href="#videoModal{{$video->id}}" role="button" class="btn btn-danger btn-sm" data-toggle="modal">Delete</a>
                             
                             <div id="videoModal{{$video->id}}" class="modal fade">
                                 <div class="modal-dialog">
@@ -47,7 +47,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                            <a href="{{ url('/delete-video/'. $video->id) }}" type="button" class="btn btn-danger">Eliminar</a>
+                                            <a href="{{ url('/delete-video/' . $video->id) }}" type="button" class="btn btn-danger">Delete</a>
                                         </div>
                                     </div>
                                 </div>

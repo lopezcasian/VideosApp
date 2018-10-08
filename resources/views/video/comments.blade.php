@@ -57,7 +57,7 @@
 							            </div>
 							            <div class="modal-footer">
 							                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-							                <a href="{{ url('/delete-comment/'. $comment->id) }}" type="button" class="btn btn-danger">Eliminar</a>
+							                <a href="{{ url('/delete-comment/'. $comment->id) }}" type="button" class="btn btn-danger">Delete</a>
 							            </div>
 							        </div>
 							    </div>

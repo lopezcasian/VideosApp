@@ -62,7 +62,7 @@ class VideoController extends Controller
 
     public function getImage($filename){
     	$file = Storage::disk('images')->get($filename);
-    	return new Response($file, 200);
+    	return new Response();
     }
 
     public function getVideoDetail($video_id){
@@ -81,11 +81,15 @@ class VideoController extends Controller
         // Get logged user, search the video and get its comments
         $user = \Auth::user();
         $video = Video::find($video_id);
-        $comments = Comment::where('video_id',$video_id)->get();
+        $comments = Comment::where('video_id', $video_id)->get();
 
         if($user && $video->user_id == $user->id){
             // Delete comments
-            $comments->delete();
+            if($comments && count($comments) >= 1){
+                foreach($comments as $comment){
+                    $comment->delete();
+                }
+            }
             
             // Delete files
             Storage::disk('images')->delete($video->image);
@@ -93,9 +97,9 @@ class VideoController extends Controller
 
             // delete video
             $video->delete();
-            $message = array('message' => 'Video deleted successfully.' );
+            $message = array('message' => 'Video deleted successfully.');
         }else{
-            $message = array('message' => 'Error.' );
+            $message = array('message' => 'Error.');
         }
 
         return redirect()->route('home')->with($message);
