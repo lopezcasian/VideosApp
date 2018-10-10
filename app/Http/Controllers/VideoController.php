@@ -105,4 +105,56 @@ class VideoController extends Controller
         return redirect()->route('home')->with($message);
 
     }
+
+    public function edit($video_id){
+        $user = \Auth::user();
+        $video = Video::findOrFail($video_id);
+        if($user && $video->user_id == $user->id){
+            return view('video.edit', array('video' => $video));
+        }else{
+            return redirect()->route('home');
+        }
+    }
+
+    public function update($video_id, Request $request){
+        $validate = $this->validate($request, array(
+                'title' => 'required|min:5',
+                'description' => 'required',
+                'video' => 'mimes:mp4'
+            ));
+
+        $user = \Auth::user();
+        $video = Video::findOrFail($video_id);
+
+        $video->user_id = $user->id;
+        $video->title = $request->input('title');
+        $video->description = $request->input('description');
+
+        // Upload thumbnail
+
+        $image = $request->file('image');
+        if( $image ){
+            $old_image = $video->image;
+            $image_path = time() . $image->getClientOriginalName();
+            \Storage::disk('images')->put($image_path, \File::get($image));
+            $video->image = $image_path;
+            Storage::disk('images')->delete($old_image);
+        }
+
+        // Upload video
+
+        $video_file = $request->file('video');
+
+        if( $video_file ){
+            $old_video = $video->video_path;
+            $video_path = time() . $video_file->getClientOriginalName();
+            \Storage::disk('videos')->put($video_path, \File::get($video_file));
+            $video->video_path = $video_path;
+            Storage::disk('videos')->delete($old_video);
+        }
+
+        $video->update();
+
+        return redirect()->route('home')->with(array('message' => 'The video has been updated successfully.'));
+    }
 }

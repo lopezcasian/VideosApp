@@ -29,7 +29,7 @@
                         <!-- Action buttons -->
                         <a class="btn btn-success btn-sm" href="{{ route('detailVideo', ['video_id' => $video->id]) }}">See</a>
                         @if(Auth::check() && Auth::user()->id == $video->user->id)
-                            <a class="btn btn-warning btn-sm" href="">Edit</a>
+                            <a class="btn btn-warning btn-sm" href="{{ route('videoEdit', ['video_id' => $video->id]) }}">Edit</a>
                             <a href="#videoModal{{$video->id}}" role="button" class="btn btn-danger btn-sm" data-toggle="modal">Delete</a>
                             
                             <div id="videoModal{{$video->id}}" class="modal fade">

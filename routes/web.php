@@ -33,6 +33,12 @@ Route::post('/savevideo', array(
 		'uses' => 'VideoController@saveVideo'
 	));
 
+Route::post('/updatevideo/{video_id}', array(
+		'as' => 'updateVideo',
+		'middleware' => 'auth',
+		'uses' => 'VideoController@update'
+	));
+
 Route::get('/thumbnail/{filename}', array(
 		'as' => 'imageVideo',
 		'uses' => 'VideoController@getImage'
@@ -52,6 +58,12 @@ Route::get('/delete-video/{video_id}', [
 		'as' => 'videoDelete',
 		'middleware' => 'auth',
 		'uses' => 'VideoController@delete'
+	]);
+
+Route::get('/edit-video/{video_id}', [
+		'as' => 'videoEdit',
+		'middleware' => 'auth',
+		'uses' => 'VideoController@edit'
 	]);
 
 Route::post('/comment', [
