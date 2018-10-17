@@ -54,6 +54,11 @@ Route::get('/video-file/{filename}', array(
 		'uses' => 'VideoController@getVideo'
 	));
 
+Route::get('/search/{search?}/{filter?}', [
+		'as' => 'videoSearch',
+		'uses' => 'VideoController@search'
+	]);
+
 Route::get('/delete-video/{video_id}', [
 		'as' => 'videoDelete',
 		'middleware' => 'auth',
@@ -77,3 +82,9 @@ Route::get('/delete-comment/{comment_id}', [
 		'middleware' => 'auth',
 		'uses' => 'CommentController@delete'
 	]);
+
+//cache
+
+Route::get('/clear-cache', function(){
+	$code = Artisan::call('cache:clear');
+});

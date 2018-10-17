@@ -15,54 +15,54 @@ use App\Comment;
 class VideoController extends Controller
 {
     public function createVideo(){
-    	return view('video.createVideo');
+        return view('video.createVideo');
     }
 
     public function saveVideo(Request $request){
-    	// Form validation
-    	$validatedData = $this->validate($request, array(
-    			'title' => 'required|min:5',
-    			'description' => 'required',
-    			'video' => 'mimes:mp4'
-    		));
+        // Form validation
+        $validatedData = $this->validate($request, array(
+                'title' => 'required|min:5',
+                'description' => 'required',
+                'video' => 'mimes:mp4'
+            ));
 
-    	$video = new Video();
-    	$user = \Auth::user();
+        $video = new Video();
+        $user = \Auth::user();
 
-    	$video->user_id = $user->id;
-    	$video->title = $request->input('title');
-    	$video->description = $request->input('description');
+        $video->user_id = $user->id;
+        $video->title = $request->input('title');
+        $video->description = $request->input('description');
 
-    	// Upload miniature
+        // Upload miniature
 
-    	$image = $request->file('image');
+        $image = $request->file('image');
 
-    	if( $image ){
-    		$image_path = time() . $image->getClientOriginalName();
-    		\Storage::disk('images')->put($image_path, \File::get($image));
-    		$video->image = $image_path;
-    	}
+        if( $image ){
+            $image_path = time() . $image->getClientOriginalName();
+            \Storage::disk('images')->put($image_path, \File::get($image));
+            $video->image = $image_path;
+        }
 
-    	// Upload video
+        // Upload video
 
-    	$video_file = $request->file('video');
+        $video_file = $request->file('video');
 
-    	if( $video_file ){
-    		$video_path = time() . $video_file->getClientOriginalName();
-    		\Storage::disk('videos')->put($video_path, \File::get($video_file));
-    		$video->video_path = $video_path;
-    	}
+        if( $video_file ){
+            $video_path = time() . $video_file->getClientOriginalName();
+            \Storage::disk('videos')->put($video_path, \File::get($video_file));
+            $video->video_path = $video_path;
+        }
 
-    	$video->save();
+        $video->save();
 
-    	return redirect()->route('home')->with(array(
-    			'message' => 'The video has been uploaded successfully.'
-    		));
+        return redirect()->route('home')->with(array(
+                'message' => 'The video has been uploaded successfully.'
+            ));
     }
 
     public function getImage($filename){
-    	$file = Storage::disk('images')->get($filename);
-    	return new Response($file, 200);
+        $file = Storage::disk('images')->get($filename);
+        return new Response($file, 200);
     }
 
     public function getVideoDetail($video_id){
@@ -155,6 +155,55 @@ class VideoController extends Controller
 
         $video->update();
 
-        return redirect()->route('home')->with(array('message' => 'The video has been updated successfully.'));
+        return redirect()->route('home')->with(array(
+                'message' => 'The video has been updated successfully.'
+            ));
+    }
+
+    public function search($search = null, $filter = null){
+        if(is_null($search)){
+            $search = \Request::get('search');
+
+            return redirect()->route('videoSearch', array('search' => $search));
+        }
+
+        if(is_null($filter) && \Request::get('filter') && !is_null($search)){
+            $filter = \Request::get('filter');
+
+            return redirect()->route('videoSearch', array(
+                    'search' => $search,
+                    'filter' => $filter)
+                );
+        }
+
+        $column = 'id';
+        $order = 'desc';
+
+        if(!is_null($filter)){
+            if($filter == 'new'){
+                $column = 'id';
+                $order = 'desc';
+            }
+
+            if($filter == 'old'){
+                $column = 'id';
+                $order = 'asc';    
+            }
+
+            if ($filter == 'atoz') {
+                $column = 'title';
+                $order = 'asc'; 
+            }
+            
+        }
+
+        $videos = Video::where('title', 'LIKE', '%' . $search . '%')
+                    ->orderBy($column, $order)
+                    ->paginate(5);
+                    
+        return view('video.search', array(
+                'videos' => $videos,
+                'search' => $search
+            ));
     }
 }

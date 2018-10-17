@@ -34,7 +34,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                        <form class="form-inline" role="search" action="">
+                        <form class="form-inline" role="search" action=" {{ url('/search') }}">
                             <input type="text" class="form-control mr-sm-2" placeholder="Search.." name="search" />
                             <button type="submit" class="btn btn-default">
                                 Search
