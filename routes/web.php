@@ -11,13 +11,13 @@
 |
 */
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
-});
+});*/
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('home');
 
 // Video controller route
 
@@ -88,3 +88,9 @@ Route::get('/delete-comment/{comment_id}', [
 Route::get('/clear-cache', function(){
 	$code = Artisan::call('cache:clear');
 });
+
+//users
+Route::get('/channel/{user_id}', array(
+		'as' => 'channel',
+		'uses' => 'UserController@channel'
+	));
