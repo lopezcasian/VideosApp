@@ -17,27 +17,52 @@
 
 Auth::routes();
 
+
+Route::middleware(['auth'])->group(function(){
+
+	//Video routes
+	Route::view('/createvideo','video.createVideo')
+		->name('createVideo');
+
+	Route::post('/savevideo', array(
+		'as' => 'saveVideo',
+		'uses' => 'VideoController@saveVideo'
+	));
+
+	Route::post('/updatevideo/{video_id}', array(
+		'as' => 'updateVideo',
+		'uses' => 'VideoController@update'
+	));
+
+	Route::get('/delete-video/{video_id}', [
+		'as' => 'videoDelete',
+		'uses' => 'VideoController@delete'
+	]);
+
+	Route::get('/edit-video/{video_id}', [
+		'as' => 'videoEdit',
+		'uses' => 'VideoController@edit'
+	]);
+
+	// Comments routes
+	Route::post('/comment', [
+		'as' => 'comment',
+		'uses' => 'CommentController@store'
+	]);
+
+	Route::get('/delete-comment/{comment_id}', [
+		'as' => 'commentDelete',
+		'uses' => 'CommentController@delete'
+	]);
+
+});
+
+
 Route::get('/', 'HomeController@index')->name('home');
 
 // Video controller route
 
-Route::get('/createvideo', array(
-		'as' => 'createVideo',
-		'middleware' => 'auth',
-		'uses' => 'VideoController@createVideo'
-	));
 
-Route::post('/savevideo', array(
-		'as' => 'saveVideo',
-		'middleware' => 'auth',
-		'uses' => 'VideoController@saveVideo'
-	));
-
-Route::post('/updatevideo/{video_id}', array(
-		'as' => 'updateVideo',
-		'middleware' => 'auth',
-		'uses' => 'VideoController@update'
-	));
 
 Route::get('/thumbnail/{filename}', array(
 		'as' => 'imageVideo',
@@ -57,30 +82,6 @@ Route::get('/video-file/{filename}', array(
 Route::get('/search/{search?}/{filter?}', [
 		'as' => 'videoSearch',
 		'uses' => 'VideoController@search'
-	]);
-
-Route::get('/delete-video/{video_id}', [
-		'as' => 'videoDelete',
-		'middleware' => 'auth',
-		'uses' => 'VideoController@delete'
-	]);
-
-Route::get('/edit-video/{video_id}', [
-		'as' => 'videoEdit',
-		'middleware' => 'auth',
-		'uses' => 'VideoController@edit'
-	]);
-
-Route::post('/comment', [
-		'as' => 'comment',
-		'middleware' => 'auth',
-		'uses' => 'CommentController@store'
-	]);
-
-Route::get('/delete-comment/{comment_id}', [
-		'as' => 'commentDelete',
-		'middleware' => 'auth',
-		'uses' => 'CommentController@delete'
 	]);
 
 //cache

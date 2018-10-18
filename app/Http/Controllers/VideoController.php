@@ -14,10 +14,6 @@ use App\Comment;
 
 class VideoController extends Controller
 {
-    public function createVideo(){
-        return view('video.createVideo');
-    }
-
     public function saveVideo(Request $request){
         // Form validation
         $validatedData = $this->validate($request, array(
