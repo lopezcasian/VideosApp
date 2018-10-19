@@ -4,9 +4,9 @@
 	<div class="container">
 		<h2>Edit {{ $video->title }}</h2>
 		<div class="row">
-			<form action="{{ route('updateVideo', ['video_id' => $video->id]) }}" method="POST" enctype="multipart/form-data" class="col-lg-7">
-				{!! csrf_field() !!}
-
+			<form action="{{ url('/videos/' . $video->id) }}" method="POST" enctype="multipart/form-data" class="col-lg-7">
+				@csrf
+				@method('PUT')
 				@if($errors->any())
 					<div class="alert alert-danger">
 						<ul>

@@ -18,7 +18,7 @@
             <!-- Action buttons -->
             <a class="btn btn-success btn-sm" href="{{ route('detailVideo', ['video_id' => $video->id]) }}">See</a>
             @if(Auth::check() && Auth::user()->id == $video->user->id)
-                <a class="btn btn-warning btn-sm" href="{{ route('videoEdit', ['video_id' => $video->id]) }}">Edit</a>
+                <a class="btn btn-warning btn-sm" href="{{ url('/videos/' . $video->id . '/edit') }}">Edit</a>
                 <a href="#videoModal{{$video->id}}" role="button" class="btn btn-danger btn-sm" data-toggle="modal">Delete</a>
                 
                 <div id="videoModal{{$video->id}}" class="modal fade">
@@ -35,8 +35,12 @@
                                 <p><small>{{ $video->title }}</small></p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <a href="{{ url('/delete-video/' . $video->id) }}" type="button" class="btn btn-danger">Delete</a>
+                                <form action="{{ url('/videos/' . $video->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
                             </div>
                         </div>
                     </div>

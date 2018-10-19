@@ -14,7 +14,7 @@ use App\Comment;
 
 class VideoController extends Controller
 {
-    public function saveVideo(Request $request){
+    public function store(Request $request){
         // Form validation
         $validatedData = $this->validate($request, array(
                 'title' => 'required|min:5',
@@ -73,7 +73,7 @@ class VideoController extends Controller
         return new Response($file, 200);
     }
 
-    public function delete($video_id){
+    public function destroy($video_id){
         // Get logged user, search the video and get its comments
         $user = \Auth::user();
         $video = Video::find($video_id);

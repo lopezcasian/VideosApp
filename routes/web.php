@@ -24,44 +24,19 @@ Route::middleware(['auth'])->group(function(){
 	Route::view('/createvideo','video.createVideo')
 		->name('createVideo');
 
-	Route::post('/savevideo', array(
-		'as' => 'saveVideo',
-		'uses' => 'VideoController@saveVideo'
-	));
-
-	Route::post('/updatevideo/{video_id}', array(
-		'as' => 'updateVideo',
-		'uses' => 'VideoController@update'
-	));
-
-	Route::get('/delete-video/{video_id}', [
-		'as' => 'videoDelete',
-		'uses' => 'VideoController@delete'
-	]);
-
-	Route::get('/edit-video/{video_id}', [
-		'as' => 'videoEdit',
-		'uses' => 'VideoController@edit'
+	Route::resource('videos', 'VideoController')->except([
+		'index','show'
 	]);
 
 	// Comments routes
-	Route::post('/comment', [
-		'as' => 'comment',
-		'uses' => 'CommentController@store'
-	]);
-
-	Route::get('/delete-comment/{comment_id}', [
-		'as' => 'commentDelete',
-		'uses' => 'CommentController@delete'
+	Route::resource('comment', 'CommentController')->only([
+		'store', 'destroy'
 	]);
 
 });
 
 
 Route::get('/', 'HomeController@index')->name('home');
-
-// Video controller route
-
 
 
 Route::get('/thumbnail/{filename}', array(

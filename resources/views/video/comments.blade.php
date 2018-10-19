@@ -56,8 +56,12 @@
 							                <p><small>{{ $comment->body }}</small></p>
 							            </div>
 							            <div class="modal-footer">
-							                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-							                <a href="{{ url('/delete-comment/'. $comment->id) }}" type="button" class="btn btn-danger">Delete</a>
+							            	<form action="{{ url('/comment/' . $comment->id ) }}" method="POST">
+							            		@csrf
+							            		@method('DELETE')
+								                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+								                <button type="submit" class="btn btn-danger">Delete</button>
+							            	</form>
 							            </div>
 							        </div>
 							    </div>
