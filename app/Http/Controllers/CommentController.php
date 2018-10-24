@@ -25,7 +25,8 @@ class CommentController extends Controller
     			));
     }
 
-    public function delete($comment_id){
+    public function destroy($comment_id){
+        //$comment_id = $request->input('comment_id');
         $user = \Auth::user();
         $comment = Comment::find($comment_id);
 

@@ -20,3 +20,8 @@
 .video-title a{
 	color: #444;
 }
+
+.btn-filter {
+	display: block;
+	margin-top: 5px;
+}

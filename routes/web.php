@@ -11,33 +11,33 @@
 |
 */
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
-});
+});*/
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
 
-// Video controller route
+Route::middleware(['auth'])->group(function(){
 
-Route::get('/createvideo', array(
-		'as' => 'createVideo',
-		'middleware' => 'auth',
-		'uses' => 'VideoController@createVideo'
-	));
+	//Video routes
+	Route::view('/createvideo','video.createVideo')
+		->name('createVideo');
 
-Route::post('/savevideo', array(
-		'as' => 'saveVideo',
-		'middleware' => 'auth',
-		'uses' => 'VideoController@saveVideo'
-	));
+	Route::resource('videos', 'VideoController')->except([
+		'index','show'
+	]);
 
-Route::post('/updatevideo/{video_id}', array(
-		'as' => 'updateVideo',
-		'middleware' => 'auth',
-		'uses' => 'VideoController@update'
-	));
+	// Comments routes
+	Route::resource('comment', 'CommentController')->only([
+		'store', 'destroy'
+	]);
+
+});
+
+
+Route::get('/', 'HomeController@index')->name('home');
+
 
 Route::get('/thumbnail/{filename}', array(
 		'as' => 'imageVideo',
@@ -54,26 +54,19 @@ Route::get('/video-file/{filename}', array(
 		'uses' => 'VideoController@getVideo'
 	));
 
-Route::get('/delete-video/{video_id}', [
-		'as' => 'videoDelete',
-		'middleware' => 'auth',
-		'uses' => 'VideoController@delete'
+Route::get('/search/{search?}/{filter?}', [
+		'as' => 'videoSearch',
+		'uses' => 'VideoController@search'
 	]);
 
-Route::get('/edit-video/{video_id}', [
-		'as' => 'videoEdit',
-		'middleware' => 'auth',
-		'uses' => 'VideoController@edit'
-	]);
+//cache
 
-Route::post('/comment', [
-		'as' => 'comment',
-		'middleware' => 'auth',
-		'uses' => 'CommentController@store'
-	]);
+Route::get('/clear-cache', function(){
+	$code = Artisan::call('cache:clear');
+});
 
-Route::get('/delete-comment/{comment_id}', [
-		'as' => 'commentDelete',
-		'middleware' => 'auth',
-		'uses' => 'CommentController@delete'
-	]);
+//users
+Route::get('/channel/{user_id}', array(
+		'as' => 'channel',
+		'uses' => 'UserController@channel'
+	));
