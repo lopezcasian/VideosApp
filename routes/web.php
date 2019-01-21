@@ -38,6 +38,10 @@ Route::middleware(['auth'])->group(function(){
 
 Route::get('/', 'HomeController@index')->name('home');
 
+Route::get('/profile/{image?}', array(
+	'as' => 'profileImage',
+	'uses' => 'UserController@getProfileImage'
+));
 
 Route::get('/thumbnail/{filename}', array(
 		'as' => 'imageVideo',

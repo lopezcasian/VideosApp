@@ -22,12 +22,21 @@ class UserController extends Controller
     		return redirect()->route('home');
     	}
 
-    	$videos = Video:: where('user_id', $user_id)->paginate(5);
+    	$videos = Video::where('user_id', $user_id)->paginate(5);
 
     	return view('user.channel', array(
     			'user' => $user,
     			'videos' => $videos
     		));
 
-    } 
+    }
+
+    public function getProfileImage($image = null){
+      if( !is_null($image) ){
+          $file = Storage::disk( 'profile' )->get( $image );
+          return new Response( $file,200 );
+      }
+      $file = Storage::disk( 'profile' )->get( 'no_user.jpg' );
+      return new Response( $file, 200 );
+    }
 }

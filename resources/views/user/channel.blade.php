@@ -4,12 +4,18 @@
 <div class="container">
     <div class="row">
         <div class="container">
+          @if(Auth::check() && Auth::user()->id == $user->id)
+            <button>Edit account</button>
+          @endif
+          <div class="video-image-mask">
+              <img class="card-img-top" src="{{ url('/profile/' . $user->image) }}" />
+          </div>
 
-        	<h2>{{ $user->name . $user->surname}} channel.</h2>
+        	<h2>{{ $user->name . $user->surname}}</h2>
 
         	<div class="clearfix"></div>
 
-            @include('video.videos_list') 
+          @include('video.videos_list') 
 
         </div>
     </div>
