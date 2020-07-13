@@ -28,4 +28,21 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * Get the videos of the user.
+     */
+    public function videos()
+    {
+        return $this->hasMany('App\Video');
+    }
+
+    /**
+     * Get the comments of the user.
+     */
+    public function comments()
+    {
+        return $this->hasMany('App\Comment');
+    }
+
 }

@@ -2,10 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Requests;
-
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,28 +11,31 @@ use App\User;
 
 class UserController extends Controller
 {
-    public function channel($user_id){
-    	$user = User::find($user_id);
+    /**
+     * Show user data.
+     * 
+     * @params App\User $user
+     * @return Response
+     */
+    public function show( User $user ){
+        $videos = $user->videos()->paginate( 5 );
 
-    	if (!is_object($user)) {
-    		return redirect()->route('home');
-    	}
-
-    	$videos = Video::where('user_id', $user_id)->paginate(5);
-
-    	return view('user.channel', array(
-    			'user' => $user,
-    			'videos' => $videos
-    		));
-
+        return view( 'user.channel', compact("user", "videos") );
     }
 
-    public function getProfileImage($image = null){
-      if( !is_null($image) ){
-          $file = Storage::disk( 'profile' )->get( $image );
-          return new Response( $file,200 );
-      }
-      $file = Storage::disk( 'profile' )->get( 'no_user.jpg' );
-      return new Response( $file, 200 );
+
+    /**
+    * TODO: Create infraestructure of profile images.
+    */
+    public function getProfileImage( $image = null ){
+        $storage = Storage::disk( 'profile' );
+
+        if( !is_null($image) ){
+            $file = $storage->get( $image );
+        } else {
+            $file = $storage->get( 'no_user.png' );
+        }
+        
+        return new Response( $file, 200 );
     }
 }

@@ -12,8 +12,9 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Video $video)
     {
+        $this->video = $video;
         $this->middleware('web');
     }
 
@@ -24,10 +25,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        //$videos = DB::table('videos')->paginate(5);
-        $videos = Video::orderBy('id','desc')->paginate(5);
-        return view('home', array(
-                'videos' => $videos
-            ));
+        $videos = $this->video->orderBy('id','desc')->paginate(5);
+        return view('home', compact( "videos" ));
     }
 }

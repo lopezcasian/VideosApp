@@ -11,12 +11,9 @@
 |
 */
 
-/*Route::get('/', function () {
-    return view('welcome');
-});*/
-
 Auth::routes();
 
+Route::get('/', 'HomeController@index')->name('home');
 
 Route::middleware(['auth'])->group(function(){
 
@@ -36,21 +33,23 @@ Route::middleware(['auth'])->group(function(){
 });
 
 
-Route::get('/', 'HomeController@index')->name('home');
-
 Route::get('/profile/{image?}', array(
 	'as' => 'profileImage',
 	'uses' => 'UserController@getProfileImage'
 ));
+
+Route::resource('users', 'UserController')->only([
+    'show'
+]);
 
 Route::get('/thumbnail/{filename}', array(
 		'as' => 'imageVideo',
 		'uses' => 'VideoController@getImage'
 	));
 
-Route::get('/video/{video_id}', array(
-		'as' => 'detailVideo',
-		'uses' => 'VideoController@getVideoDetail'
+Route::get('/videos/{video}', array(
+		'as' => 'videos.show',
+		'uses' => 'VideoController@show'
 	));
 
 Route::get('/video-file/{filename}', array(
@@ -64,13 +63,6 @@ Route::get('/search/{search?}/{filter?}', [
 	]);
 
 //cache
-
 Route::get('/clear-cache', function(){
 	$code = Artisan::call('cache:clear');
 });
-
-//users
-Route::get('/channel/{user_id}', array(
-		'as' => 'channel',
-		'uses' => 'UserController@channel'
-	));

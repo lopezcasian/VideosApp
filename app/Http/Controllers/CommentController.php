@@ -25,10 +25,9 @@ class CommentController extends Controller
     			));
     }
 
-    public function destroy($comment_id){
+    public function destroy(Comment $comment){
         //$comment_id = $request->input('comment_id');
         $user = \Auth::user();
-        $comment = Comment::find($comment_id);
 
         if($user && ($comment->user_id == $user->id || $comment->video->user_id == $user->id)){
             $comment->delete();
