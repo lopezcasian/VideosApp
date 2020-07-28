@@ -18,7 +18,7 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::middleware(['auth'])->group(function(){
 
 	//Video routes
-	Route::view('/videos/create','video.createVideo')
+	Route::view('/videos/create','video.create')
 		->name('videos.create');
 
 	Route::resource('videos', 'VideoController')->except([

@@ -15,7 +15,7 @@
 
         	<div class="clearfix"></div>
 
-          @include('video.videos_list') 
+          @include('video.list') 
 
         </div>
     </div>

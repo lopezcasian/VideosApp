@@ -20,7 +20,7 @@ class CommentController extends Controller
 
     	$comment->save();
 
-    	return redirect()->route('detailVideo', ['video_id' => $comment->video_id])->with(array(
+    	return redirect()->route('video.show', ['video_id' => $comment->video_id])->with(array(
     				'message' => 'Comment added successfully.'
     			));
     }
@@ -33,7 +33,7 @@ class CommentController extends Controller
             $comment->delete();
         }
 
-        return redirect()->route('detailVideo', ['video_id' => $comment->video_id])->with(array(
+        return redirect()->route('video.show', ['video_id' => $comment->video_id])->with(array(
                     'message' => 'Comment deleted successfully.'
                 ));
     }

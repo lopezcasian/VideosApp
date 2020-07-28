@@ -113,10 +113,10 @@ class VideoController extends Controller
 
     public function edit( Video $video ){
         $user = \Auth::user();
-
-        if( $user && $video->user_id == $user->id ){
+        
+        if( $user->can('update', $video) ){
             return view( 'video.edit', compact( "video" ) );
-        } else {
+        } else {            
             return redirect()->route( 'home' );
         }
     }

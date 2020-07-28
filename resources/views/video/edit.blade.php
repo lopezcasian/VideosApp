@@ -27,10 +27,10 @@
 				</div>
 				<div class="form-group">
 					<label for="image">Miniature</label>
-					@if(Storage::disk('images')->has($video->image))
+					@if( $video->image )
                         <div class="video-image-thumb">
                             <div class="video-image-mask">
-                                <img class="card-img-top" src="{{ url('/thumbnail/' . $video->image) }}" />
+                                <img class="card-img-top" src="{{ url('/videos/miniature/' . $video->image) }}" />
                             </div>
                         </div>
                     @endif
@@ -40,7 +40,7 @@
 					<label for="video">Video file</label>
 					<br/>
 					<video controls id="video-player">
-		                <source src="{{ route('fileVideo', ['filename' => $video->video_path]) }}" type="video/mp4" />
+		                <source src="{{ route('videos.get.video', ['filename' => $video->video_path]) }}" type="video/mp4" />
 		                Your browser is not compatible with HTLM5.
 		            </video>
 					<input type="file" name="video" class="form-control" id="video" />

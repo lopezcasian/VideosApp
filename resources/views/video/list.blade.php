@@ -4,7 +4,7 @@
     <div class="video-item col-md-10 float-left card mb-2">
         <div class="card-body">
             <!-- Video thumbnail -->
-            @if( Storage::disk('images')->has($video->image) )
+            @if( $video->image )
                 <div class="video-image-thumb col-md-3 float-left">
                     <div class="video-image-mask">
                         <img class="card-img-top" src="{{ url('/videos/miniature/' . $video->image) }}" />

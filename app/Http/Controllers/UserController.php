@@ -20,7 +20,7 @@ class UserController extends Controller
     public function show( User $user ){
         $videos = $user->videos()->paginate( 5 );
 
-        return view( 'user.channel', compact("user", "videos") );
+        return view( 'user.detail', compact("user", "videos") );
     }
 
 
