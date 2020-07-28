@@ -13,7 +13,7 @@ class StoreVideo extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -27,7 +27,7 @@ class StoreVideo extends FormRequest
             'title'       => 'required|min:5|max:255',
             'description' => 'required|min:1|max:255',
             'video'       => 'required|mimes:mp4',
-            'image'       => 'required'
+            'image'       => 'required|mimes:jpg,png,jpeg'
         ];
     }
 }

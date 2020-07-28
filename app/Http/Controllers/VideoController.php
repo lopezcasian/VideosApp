@@ -3,79 +3,84 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests;
-
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
 use App\Video;
 use App\Comment;
+use App\Http\Requests\StoreVideo;
+use App\Interfaces\VideoStorageInterface;
+use App\Interfaces\ImageStorageInterface;
 
 class VideoController extends Controller
 {
-    public function store( Request $request ){
-        // Form validation
-        $validatedData = $this->validate( $request, array(
-            'title'       => 'required|min:5',
-            'description' => 'required',
-            'video'       => 'mimes:mp4'
-          ));
 
-        $video = new Video();
-        $user  = \Auth::user();
+    public function __construct( VideoStorageInterface $video_storage, 
+                                 ImageStorageInterface $image_storage, 
+                                 Video $video )
+    {
+        $this->video_storage = $video_storage;
+        $this->image_storage = $image_storage;
+        $this->video = $video;
+    }
 
-        $video->user_id     = $user->id;
-        $video->title       = $request->input( 'title' );
-        $video->description = $request->input( 'description' );
+    /**
+     * Store video
+     *
+     * @param App\Http\Requests\StoreVideo $request
+     * @return Response
+     */
+    public function store( StoreVideo $request )
+    {
+        
+        $this->video->title       = $request->input('title');
+        $this->video->description = $request->input('description');
+        $this->video->video_path  = $this->video_storage->save( $request->file( 'video' ) );
+        $this->video->image       = $this->image_storage->save( $request->file( 'image' ) );
+        $this->video->user_id     = \Auth::id();
 
-        // Upload miniature
-
-        $image = $request->file( 'image' );
-
-        if( $image ){
-            $image_path = time() . $image->getClientOriginalName();
-            \Storage::disk( 'images' )
-                ->put( $image_path, \File::get( $image ) );
-            $video->image = $image_path;
-        }
-
-        // Upload video
-
-        $video_file = $request->file( 'video' );
-
-        if( $video_file ){
-            $video_path = time() . $video_file->getClientOriginalName();
-            \Storage::disk( 'videos' )
-                ->put( $video_path, \File::get( $video_file ) );
-            $video->video_path = $video_path;
-        }
-
-        $video->save();
+        $this->video->save();
 
         return redirect()->route( 'home' )->with( array(
             'message' => 'The video has been uploaded successfully.'
           ));
     }
 
-    public function getImage( $filename ){
-        $file = Storage::disk( 'images' )->get( $filename );
+    public function getImage( $filename )
+    {
+        $file = $this->image_storage->get( $filename ); 
         return new Response( $file, 200 );
     }
 
-    public function getVideoDetail( $video_id ){
-        $video = Video::find( $video_id );
-        return view( 'video.detail', array(
-                'video' => $video
-            ) );
+    /**
+     * Show videos details
+     * 
+     * @param Video $video
+     * @return Response
+     */
+    public function show( Video $video )
+    {
+        return view( 'video.detail', compact("video") );
     }
 
-    public function getVideo( $filename ){
-        $file = Storage::disk( 'videos' )->get( $filename );
+    /**
+     * Get video from storage
+     *
+     * @param string $filename
+     */
+    public function getVideo( string $filename )
+    {
+        $file = $this->video_storage->get( $filename );
         return new Response( $file, 200 );
     }
 
-    public function destroy( $video_id ){
+
+    /**
+     * Destroy video
+     * 
+     * @param Video $video
+     * @return Redirect
+     */
+    public function destroy( Video $video ){
         // Get logged user, search the video and get its comments
         $user = \Auth::user();
         $video = Video::find( $video_id );
@@ -106,13 +111,13 @@ class VideoController extends Controller
 
     }
 
-    public function edit($video_id){
+    public function edit( Video $video ){
         $user = \Auth::user();
-        $video = Video::findOrFail($video_id);
-        if($user && $video->user_id == $user->id){
-            return view('video.edit', array('video' => $video));
-        }else{
-            return redirect()->route('home');
+
+        if( $user && $video->user_id == $user->id ){
+            return view( 'video.edit', compact( "video" ) );
+        } else {
+            return redirect()->route( 'home' );
         }
     }
 

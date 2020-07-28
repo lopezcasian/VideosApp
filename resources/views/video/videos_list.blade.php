@@ -4,19 +4,19 @@
     <div class="video-item col-md-10 float-left card mb-2">
         <div class="card-body">
             <!-- Video thumbnail -->
-            @if(Storage::disk('images')->has($video->image))
+            @if( Storage::disk('images')->has($video->image) )
                 <div class="video-image-thumb col-md-3 float-left">
                     <div class="video-image-mask">
-                        <img class="card-img-top" src="{{ url('/thumbnail/' . $video->image) }}" />
+                        <img class="card-img-top" src="{{ url('/videos/miniature/' . $video->image) }}" />
                     </div>
                 </div>
             @endif
             <div class="data">
-                <h4 class="video-title"><a href="{{ route('detailVideo', ['video_id' => $video->id]) }}">{{ $video->title }}</a></h4>
-                <p><a href="{{ route('channel', ['user_id' => $video->user->id]) }}">{{ $video->user->name . ' ' . $video->user->surname }}</a>| {{ \FormatTime::LongTimeFilter($video->created_at)}}</p>
+                <h4 class="video-title"><a href="{{ route('videos.show', ['video_id' => $video->id]) }}">{{ $video->title }}</a></h4>
+                <p><a href="{{ route('users.show', ['user_id' => $video->user->id]) }}">{{ $video->user->name . ' ' . $video->user->surname }}</a>| {{ \FormatTime::LongTimeFilter($video->created_at)}}</p>
             </div>
             <!-- Action buttons -->
-            <a class="btn btn-success btn-sm" href="{{ route('detailVideo', ['video_id' => $video->id]) }}">See</a>
+            <a class="btn btn-success btn-sm" href="{{ route('videos.show', ['video_id' => $video->id]) }}">See</a>
             @if(Auth::check() && Auth::user()->id == $video->user->id)
                 <a class="btn btn-warning btn-sm" href="{{ url('/videos/' . $video->id . '/edit') }}">Edit</a>
                 <a href="#videoModal{{$video->id}}" role="button" class="btn btn-danger btn-sm" data-toggle="modal">Delete</a>

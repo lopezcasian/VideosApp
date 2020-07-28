@@ -9,7 +9,7 @@
             <!-- Video -->
 
             <video controls id="video-player">
-                <source src="{{ route('fileVideo', ['filename' => $video->video_path]) }}" type="video/mp4" />
+                <source src="{{ route('videos.get.video', ['filename' => $video->video_path]) }}" type="video/mp4" />
                 Your browser is not compatible with HTLM5.
             </video>
 
@@ -17,7 +17,7 @@
             <div class="card video-data">
                 <div class="card-header">
                     <div class="card-title">
-                        Uploaded by <strong><a href="{{ route('channel', ['user_id' => $video->user->id]) }}">{{ $video->user->name . ' ' . $video->user->surname }}</a></strong> {{ \FormatTime::LongTimeFilter($video->created_at)}}
+                        Uploaded by <strong><a href="{{ route('users.show', ['user_id' => $video->user->id]) }}">{{ $video->user->name . ' ' . $video->user->surname }}</a></strong> {{ \FormatTime::LongTimeFilter($video->created_at)}}
                     </div>
                 </div>
                 <div class="card-body">

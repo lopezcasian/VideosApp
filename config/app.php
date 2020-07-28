@@ -160,6 +160,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\FormatTimeServiceProvider::class,
+        App\Providers\VideoStorageServiceProvider::class,
+        App\Providers\ImageStorageServiceProvider::class,
 
     ],
 

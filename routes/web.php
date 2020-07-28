@@ -18,11 +18,11 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::middleware(['auth'])->group(function(){
 
 	//Video routes
-	Route::view('/createvideo','video.createVideo')
-		->name('createVideo');
+	Route::view('/videos/create','video.createVideo')
+		->name('videos.create');
 
 	Route::resource('videos', 'VideoController')->except([
-		'index','show'
+		'index','show', 'create'
 	]);
 
 	// Comments routes
@@ -42,18 +42,18 @@ Route::resource('users', 'UserController')->only([
     'show'
 ]);
 
-Route::get('/thumbnail/{filename}', array(
-		'as' => 'imageVideo',
-		'uses' => 'VideoController@getImage'
-	));
-
 Route::get('/videos/{video}', array(
 		'as' => 'videos.show',
 		'uses' => 'VideoController@show'
 	));
 
-Route::get('/video-file/{filename}', array(
-		'as' => 'fileVideo',
+Route::get('/videos/miniature/{filename}', array(
+		'as' => 'videos.get.miniature',
+		'uses' => 'VideoController@getImage'
+	));
+
+Route::get('/videos/file/{filename}', array(
+		'as' => 'videos.get.video',
 		'uses' => 'VideoController@getVideo'
 	));
 
