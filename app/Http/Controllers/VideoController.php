@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Video;
 use App\Comment;
 use App\Http\Requests\StoreVideo;
+use App\Http\Requests\UpdateVideo;
 use App\Interfaces\VideoStorageInterface;
 use App\Interfaces\ImageStorageInterface;
 
@@ -80,7 +81,8 @@ class VideoController extends Controller
      * @param Video $video
      * @return Redirect
      */
-    public function destroy( Video $video ){
+    public function destroy( Video $video )
+    {
         // Get logged user, search the video and get its comments
         $user = \Auth::user();
         $video = Video::find( $video_id );
@@ -111,51 +113,36 @@ class VideoController extends Controller
 
     }
 
-    public function edit( Video $video ){
+    public function edit( Video $video )
+    {
         $user = \Auth::user();
         
         if( $user->can('update', $video) ){
             return view( 'video.edit', compact( "video" ) );
-        } else {            
-            return redirect()->route( 'home' );
         }
+
+        return redirect()->route( 'home' );
     }
 
-    public function update($video_id, Request $request){
-        $validate = $this->validate($request, array(
-                'title' => 'required|min:5',
-                'description' => 'required',
-                'video' => 'mimes:mp4'
-            ));
-
-        $user = \Auth::user();
-        $video = Video::findOrFail($video_id);
-
-        $video->user_id = $user->id;
-        $video->title = $request->input('title');
+    public function update( Video $video, UpdateVideo $request )
+    {
+        $video->title       = $request->input('title');
         $video->description = $request->input('description');
-
-        // Upload thumbnail
-
+        
         $image = $request->file('image');
         if( $image ){
             $old_image = $video->image;
-            $image_path = time() . $image->getClientOriginalName();
-            \Storage::disk('images')->put($image_path, \File::get($image));
-            $video->image = $image_path;
-            Storage::disk('images')->delete($old_image);
+            $video->image = $this->image_storage->save( $image );
+
+            $this->image_storage->destroy( $old_image );
         }
 
-        // Upload video
-
         $video_file = $request->file('video');
-
         if( $video_file ){
             $old_video = $video->video_path;
-            $video_path = time() . $video_file->getClientOriginalName();
-            \Storage::disk('videos')->put($video_path, \File::get($video_file));
-            $video->video_path = $video_path;
-            Storage::disk('videos')->delete($old_video);
+            $video->video_path = $this->video_storage->save( $video_file );
+
+            $this->video_storage->destroy( $old_image );
         }
 
         $video->update();

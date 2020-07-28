@@ -16,6 +16,8 @@ class VideoMiniatureStorageTest extends TestCase
     {
         parent::setUp();
         Storage::fake( 'images' );
+
+        $this->storage = Storage::disk( 'videos' );
     }
 
     /**
@@ -25,14 +27,34 @@ class VideoMiniatureStorageTest extends TestCase
      */
     public function testSaveMiniature()
     {
-        $storage = Storage::disk( 'images' );
-
-        $sut = new VideoMiniatureStorage( $storage );
+        $sut = new VideoMiniatureStorage( $this->storage );
 
         $file = UploadedFile::fake()->image( 'miniature_unit_test.jpg' );
 
         $result = $sut->save( $file );
 
-        $storage->assertExists( $result );
+        $this->storage->assertExists( $result );
+    }
+
+    # TODO: Get file from storage
+
+    /**
+     * Destroy miniature from storage
+     *
+     * @return void
+     */
+    public function testDeleteMiniature()
+    {
+        $file_name = "miniature_unit_test_destroy.jpg";
+        $file = UploadedFile::fake()->image( $file_name );
+
+        $this->storage->put( $file_name, $file );
+
+        $sut = new VideoMiniatureStorage( $this->storage );
+
+        $saved_file = $sut->save( $file );
+        $sut->destroy( $saved_file );
+
+        $this->storage->assertMissing( $saved_file );
     }
 }

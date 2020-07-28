@@ -46,6 +46,6 @@ class FileVideoStorage implements VideoStorageInterface {
 
     public function destroy( $filename )
     {
-
+        return $this->storage->delete( $filename );
     }
 }

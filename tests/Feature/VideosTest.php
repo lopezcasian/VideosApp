@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -35,7 +36,10 @@ class VideosTest extends TestCase
     public function testStoreVideoWithValidData()
     {
         $user = factory( User::class )->create();
-        $video = factory( Video::class )->make();
+        $video = factory( Video::class )->make([
+                    'image' =>'', 
+                    'video_path' => ''
+                ]);
 
         $file_video = UploadedFile::fake()->create( 'video_test.mp4', 10000 );
         $file_image = UploadedFile::fake()->image( 'miniature_test.jpg' );
@@ -66,7 +70,10 @@ class VideosTest extends TestCase
     public function testStoreVideoWithInvalidData()
     {
         $user = factory( User::class )->create();
-        $video = factory( Video::class )->make();
+        $video = factory( Video::class )->make([
+                    'image' =>'', 
+                    'video_path' => ''
+                ]);
 
         $file_video = UploadedFile::fake()->create( 'video_test.avi', 10000 );
 
@@ -96,12 +103,9 @@ class VideosTest extends TestCase
      */
     public function testGetVideo()
     {
-        $file = UploadedFile::fake()->create( "video_testing.mp4", 10000 );
+        $video = factory( Video::class )->create();
 
-        $storage = new FileVideoStorage( Storage::disk( $this->video_file_disk_name ) );
-        $video_path = $storage->save( $file );
-
-        $response = $this->get( '/videos/file/' . $video_path );
+        $response = $this->get( '/videos/file/' . $video->video_path );
         
         $response->assertStatus(200);
     }
@@ -125,12 +129,9 @@ class VideosTest extends TestCase
      */
     public function testGetVideoMiniature()
     {
-        $file = UploadedFile::fake()->image( "image_testing.jpg" );
-
-        $storage = new VideoMiniatureStorage( Storage::disk( $this->video_miniature_disk_name ) );
-        $miniature_path = $storage->save( $file );
+        $video = factory( Video::class )->create();
         
-        $response = $this->get( '/videos/miniature/' . $miniature_path );
+        $response = $this->get( '/videos/miniature/' . $video->image );
         
         $response->assertStatus(200);
     }
@@ -146,4 +147,109 @@ class VideosTest extends TestCase
         
         $response->assertStatus(404);
     }
+
+    /**
+     * Get edit video view
+     *
+     * @return void
+     */
+    public function testGetEditVideoView()
+    {
+        $user = factory( User::class )->create();
+        $video = factory( Video::class )->create([
+                    "user_id" => $user->id
+                ]);
+
+        $response = $this->actingAs( $user )
+                            ->get( "/videos/$video->id/edit" );
+
+        $response->assertStatus( 200 );
+        $response->assertSee( $video->name );
+        $response->assertSee( $video->description );
+    }
+
+    /**
+     * Get edit video view of an unexistend video
+     *
+     * @return void
+     */
+    public function testGetEditVideoViewOfUnexistentVideo()
+    {
+        $user = factory( User::class )->create();
+        $response = $this->actingAs( $user )
+                            ->get( "/videos/asdfasdfsdfasdf234/edit" );
+
+        $response->assertStatus( 404 );
+    }
+
+    /**
+     * Get edit video view of an unauthorized user
+     *
+     * @return void
+     */
+    public function testGetEditVideoViewOfAnUnauthorizedUser()
+    {
+        $user1 = factory( User::class )->create();
+        $video1 = factory( Video::class )->create([
+                    "user_id" => $user1->id
+                ]);
+
+        $user2 = factory( User::class )->create();
+        $video2 = factory( Video::class )->create([
+                    "user_id" => $user2->id
+                ]);
+
+        $response1 = $this->actingAs( $user1 )
+                            ->get( "/videos/$video2->id/edit" );
+
+        $response2 = $this->actingAs( $user2 )
+                            ->get( "/videos/$video1->id/edit" );
+
+        $response1->assertStatus( 302 );
+        $response2->assertStatus( 302 );
+    }
+
+    /**
+     * Edit video
+     * 
+     * @return void
+     */
+    public function testEditVideo()
+    {
+        $user = factory( User::class )->create();
+        $video = factory( Video::class )->create([
+                    "user_id" => $user->id
+                ]);
+
+        $other_video = factory( Video::class )->make(["video_path" => "", "image" => ""]);
+        
+        $file_video = UploadedFile::fake()->create( 'update_video.mp4', 10000 );
+        $file_image = UploadedFile::fake()->image( 'update_img.jpg' );
+
+        $response = $this->actingAs( $user )
+                            ->put( "/videos/$video->id",[
+                                "title" => $other_video->title,
+                                "description" => $other_video->description,
+                                "video" => $file_video,
+                                "image" => $file_image
+                            ] );
+
+        $response->assertStatus(302);
+
+        $this->assertDatabaseHas( "videos", [
+                    "id" => $video->id,
+                    "title" => $other_video->title,
+                    "description" => $other_video->description,
+                    "user_id" => $video->user_id
+                ]);
+
+        $this->assertDatabaseMissing( "videos", [
+                "title" => $video->title,
+                "description" => $video->description,
+                "video_path" => $video->video_path,
+                "image" => $video->image
+            ]);
+    }
+
+
 }

@@ -47,6 +47,6 @@ class VideoMiniatureStorage implements ImageStorageInterface {
 
     public function destroy( $filename )
     {
-
+        return $this->storage->delete( $filename );
     }
 }
