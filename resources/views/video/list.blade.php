@@ -17,10 +17,12 @@
             </div>
             <!-- Action buttons -->
             <a class="btn btn-success btn-sm" href="{{ route('videos.show', ['video_id' => $video->id]) }}">See</a>
-            @if(Auth::check() && Auth::user()->id == $video->user->id)
+            @can( 'update', $video )
                 <a class="btn btn-warning btn-sm" href="{{ url('/videos/' . $video->id . '/edit') }}">Edit</a>
+            @endcan
+            @can( 'delete', $video )
                 <a href="#videoModal{{$video->id}}" role="button" class="btn btn-danger btn-sm" data-toggle="modal">Delete</a>
-                
+            
                 <div id="videoModal{{$video->id}}" class="modal fade">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -37,7 +39,7 @@
                             <div class="modal-footer">
                                 <form action="{{ url('/videos/' . $video->id) }}" method="POST">
                                     @csrf
-                                    @method('DELETE')
+                                    @method( 'DELETE' )
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                     <button type="submit" class="btn btn-danger">Delete</button>
                                 </form>
@@ -45,8 +47,7 @@
                         </div>
                     </div>
                 </div>
-            @endif
-
+            @endcan
         </div>
     </div>
     @endforeach

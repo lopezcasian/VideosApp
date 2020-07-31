@@ -83,31 +83,18 @@ class VideoController extends Controller
      */
     public function destroy( Video $video )
     {
-        // Get logged user, search the video and get its comments
-        $user = \Auth::user();
-        $video = Video::find( $video_id );
-        $comments = Comment::where( 'video_id', $video_id )->get();
+        $this->authorize( 'delete', $video );
+        
+        $video->comments()->delete();
 
-        if( $user && $video->user_id == $user->id ){
-            // Delete comments
-            if( $comments && count($comments) >= 1 ){
-              foreach( $comments as $comment ){
-                $comment->delete();
-              }
-            }
-            
-            // Delete files
-            Storage::disk( 'images' )->delete( $video->image );
-            Storage::disk( 'videos' )->delete( $video->video_path );
+        $this->image_storage->destroy( $video->image );
+        $this->video_storage->destroy( $video->video_path );
 
-            // delete video
-            $video->delete();
-            $message = array( 
-              'message' => 'Video deleted successfully.' 
-            );
-        }else{
-            $message = array('message' => 'Error.');
-        }
+        $video->delete();
+
+        $message = array( 
+          'message' => 'Video deleted successfully.' 
+        );
 
         return redirect()->route('home')->with($message);
 

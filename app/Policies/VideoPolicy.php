@@ -54,7 +54,7 @@ class VideoPolicy
      */
     public function delete(User $user, Video $video)
     {
-        //
+        return $video->user_id == $user->id;
     }
 
     /**

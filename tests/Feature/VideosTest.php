@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 use App\Video;
 use App\User;
+use App\Comment;
 use App\Classes\FileVideoStorage;
 use App\Classes\VideoMiniatureStorage;
 
@@ -249,6 +250,38 @@ class VideosTest extends TestCase
                 "video_path" => $video->video_path,
                 "image" => $video->image
             ]);
+    }
+
+
+    /**
+     * Delete a video and relations
+     *
+     * @return void
+     */
+    public function testDeleteVideo()
+    {
+        $user = factory( User::class )->create();
+        $video = factory( Video::class )->create([
+                    "user_id" => $user->id
+                ]);
+        $comments = factory( Comment::class, 3 )->create([
+                "video_id" => $video->id
+            ]);
+
+        $response = $this->actingAs( $user )
+                            ->delete( "/videos/$video->id");
+
+        $response->assertStatus( 302 );
+
+        $this->assertDatabaseMissing("comments", [
+                "video_id" => $video->id
+            ]);
+
+        $this->assertDatabaseMissing("videos", [
+                "id" => $video->id
+            ]);
+
+        # TODO: Assert storage
     }
 
 
