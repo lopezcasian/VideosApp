@@ -162,6 +162,7 @@ return [
         App\Providers\FormatTimeServiceProvider::class,
         App\Providers\VideoStorageServiceProvider::class,
         App\Providers\ImageStorageServiceProvider::class,
+        App\Providers\VideosOrderServiceProvider::class,
 
     ],
 

@@ -284,5 +284,21 @@ class VideosTest extends TestCase
         # TODO: Assert storage
     }
 
+    /**
+     * Search and order videos
+     *
+     * @return void
+     */
+    public function testSearchAndOrderVideos()
+    {
+        $videos = factory( Video::class, 15 )->create();
+
+        $response = $this->post("/videos/search", [
+                "search" => $videos[0]->title
+            ]);
+
+        $response->assertStatus( 200 );
+    }
+
 
 }

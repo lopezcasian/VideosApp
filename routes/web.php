@@ -57,8 +57,8 @@ Route::get('/videos/file/{filename}', array(
 		'uses' => 'VideoController@getVideo'
 	));
 
-Route::get('/search/{search?}/{filter?}', [
-		'as' => 'videoSearch',
+Route::post('/videos/search', [
+		'as' => 'video.search',
 		'uses' => 'VideoController@search'
 	]);
 

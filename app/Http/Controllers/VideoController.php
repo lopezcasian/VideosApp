@@ -11,6 +11,7 @@ use App\Http\Requests\StoreVideo;
 use App\Http\Requests\UpdateVideo;
 use App\Interfaces\VideoStorageInterface;
 use App\Interfaces\ImageStorageInterface;
+use App\Interfaces\OrderVideosInterface;
 
 class VideoController extends Controller
 {
@@ -116,20 +117,20 @@ class VideoController extends Controller
         $video->title       = $request->input('title');
         $video->description = $request->input('description');
         
-        $image = $request->file('image');
-        if( $image ){
-            $old_image = $video->image;
-            $video->image = $this->image_storage->save( $image );
+        $imageOfRequest = $request->file('image');
+        if( $imageOfRequest ){
+            $oldImage = $video->image;
+            $video->image = $this->image_storage->save( $imageOfRequest );
 
-            $this->image_storage->destroy( $old_image );
+            $this->image_storage->destroy( $oldImage );
         }
 
-        $video_file = $request->file('video');
+        $videoOfRequest = $request->file('video');
         if( $video_file ){
-            $old_video = $video->video_path;
-            $video->video_path = $this->video_storage->save( $video_file );
+            $oldVideo = $video->video_path;
+            $video->video_path = $this->video_storage->save( $videoOfRequest );
 
-            $this->video_storage->destroy( $old_image );
+            $this->video_storage->destroy( $oldVideo );
         }
 
         $video->update();
@@ -139,54 +140,21 @@ class VideoController extends Controller
             ));
     }
 
-    public function search($search = null, $filter = null){
-        if(is_null($search)){
-            $search = \Request::get('search');
+    public function search( Request $request, OrderVideosInterface $orderVideos ){
+        $stringToSearch = $request->get('search');
 
-            if (is_null($search)) {
-                return redirect()->route('home');
-            }
-
-            return redirect()->route('videoSearch', array('search' => $search));
+        if( empty( $stringToSearch ) ){
+            return redirect()->route('home');
         }
 
-        if(is_null($filter) && \Request::get('filter') && !is_null($search)){
-            $filter = \Request::get('filter');
+        $orderScope = $orderVideos->getOrderScope();
 
-            return redirect()->route('videoSearch', array(
-                    'search' => $search,
-                    'filter' => $filter)
-                );
-        }
-
-        $column = 'id';
-        $order = 'desc';
-
-        if(!is_null($filter)){
-            if($filter == 'new'){
-                $column = 'id';
-                $order = 'desc';
-            }
-
-            if($filter == 'old'){
-                $column = 'id';
-                $order = 'asc';    
-            }
-
-            if ($filter == 'atoz') {
-                $column = 'title';
-                $order = 'asc'; 
-            }
-            
-        }
-
-        $videos = Video::where('title', 'LIKE', '%' . $search . '%')
-                    ->orderBy($column, $order)
+        $videos = $orderScope->filterByTitle( $stringToSearch )
                     ->paginate(5);
 
         return view('video.search', array(
                 'videos' => $videos,
-                'search' => $search
+                'search' => $stringToSearch
             ));
     }
 }

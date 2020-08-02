@@ -9,14 +9,16 @@
         	</div>
 
         	<div class="col-md-8 float-right">
-	        	<form class="col-md-4 float-right" action="{{ url('/search/' . $search) }}" method="GET">
-	        		<label for="filter">Order by</label>
-	        		<select name="filter" class="form-control">
+	        	<form class="col-md-4 float-right" action="{{ url('/videos/search') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="search" value="{{ $search }}">
+	        		<label for="order">Order by</label>
+	        		<select name="order" class="form-control">
 	        			<option value="new">Newest</option>
 	        			<option value="old">Oldest</option>
 	        			<option value="atoz">A to Z</option>
 	        		</select>
-	        		<input type="submit" value="order" class="btn-filter btn btn-sm btn-primary" />
+	        		<input type="submit" class="btn-filter btn btn-sm btn-primary" />
 	        	</form>
         	</div>
 
