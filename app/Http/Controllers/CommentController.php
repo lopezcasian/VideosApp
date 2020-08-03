@@ -3,37 +3,49 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
+use App\Http\Requests\StoreComment;
 use App\Comment;
 
 class CommentController extends Controller
 {
-    public function store(Request $request){
-    	$validate = $this->validate($request, [
-    			'body' => 'required'
-    		]);
+    public function __construct( Comment $comment )
+    {
+        $this->comment = $comment;
+    }
 
-    	$comment = new Comment();
-    	$user = \Auth::user();
-    	$comment->user_id = $user->id;
-    	$comment->video_id = $request->input('video_id');
-    	$comment->body = $request->input('body');
 
-    	$comment->save();
+    /**
+     * Store comment
+     *
+     * @param \App\Http\Requests\StoreComment $request
+     * @param \Illuminate\Http\RedirectResponse
+     */
+    public function store( StoreComment $request )
+    {
+    	$this->comment->video_id = $request->input('video_id');
+    	$this->comment->body     = $request->input('body');
+        $this->comment->user_id  = \Auth::id();
 
-    	return redirect()->route('video.show', ['video_id' => $comment->video_id])->with(array(
+    	$this->comment->save();
+
+    	return redirect()->route('videos.show', ['video_id' => $this->comment->video_id])->with(array(
     				'message' => 'Comment added successfully.'
     			));
     }
 
-    public function destroy(Comment $comment){
-        //$comment_id = $request->input('comment_id');
-        $user = \Auth::user();
+    /**
+     * Delete comment
+     *
+     * @param \App\Comment $comment
+     * @param \Illuminate\Http\RedirectResponse
+     */
+    public function destroy( Comment $comment ){
+        $this->authorize('delete', $comment );
 
-        if($user && ($comment->user_id == $user->id || $comment->video->user_id == $user->id)){
-            $comment->delete();
-        }
+        $comment->delete();
 
-        return redirect()->route('video.show', ['video_id' => $comment->video_id])->with(array(
+        return redirect()->route('videos.show', ['video_id' => $comment->video_id])->with( array(
                     'message' => 'Comment deleted successfully.'
                 ));
     }

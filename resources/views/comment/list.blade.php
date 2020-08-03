@@ -9,13 +9,11 @@
 @endif
 
 @if(Auth::check())
-	<form class="col-md-4" method="POST" action="{{ url('/comment') }}">
+	<form class="col-md-4" method="POST" action="{{ url('/comments') }}">
 		@csrf
 		<input type="hidden" name="video_id" value="{{ $video->id }}" required />
 		<p>
-			<textarea class="form-control" name="body" required>
-				
-			</textarea>
+			<textarea class="form-control" name="body" required></textarea>
 		</p>
 		<input type="submit" name="" value="Add comment" class="btn btn-success" />
 	</form>
@@ -38,7 +36,7 @@
                 <div class="card-body">
                     {{ $comment->body }}
 
-                  	@if(Auth::check() && (Auth::user()->id == $comment->user_id || Auth::user()->id == $video->user->id))
+                  	@can( "delete", $comment )
 		            	<div class="float-right">
 			            	<a href="#commentModal{{$comment->id}}" role="button" class="btn btn-danger" data-toggle="modal">Delete</a>
 			            	
@@ -56,7 +54,7 @@
 							                <p><small>{{ $comment->body }}</small></p>
 							            </div>
 							            <div class="modal-footer">
-							            	<form action="{{ url('/comment/' . $comment->id ) }}" method="POST">
+							            	<form action="{{ url('/comments/' . $comment->id ) }}" method="POST">
 							            		@csrf
 							            		@method('DELETE')
 								                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -67,7 +65,7 @@
 							    </div>
 							</div>
 						</div>
-		            @endif
+		            @endcan
                 </div>
             </div>
 		</div>

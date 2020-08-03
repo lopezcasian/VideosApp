@@ -12,6 +12,11 @@ class OrderVideosTitleAsc implements OrderVideosInterface
         $this->video = $video;
     }
 
+    /**
+     * Scope a query to order by title ascending.
+     *
+     * @return \App\Video
+     */
     public function getOrderScope()
     { 
         return $this->video->orderByTitleAsc();

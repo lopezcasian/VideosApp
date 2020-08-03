@@ -26,7 +26,7 @@ Route::middleware(['auth'])->group(function(){
 	]);
 
 	// Comments routes
-	Route::resource('comment', 'CommentController')->only([
+	Route::resource('comments', 'CommentController')->only([
 		'store', 'destroy'
 	]);
 

@@ -12,6 +12,11 @@ class OrderVideosLatest implements OrderVideosInterface
         $this->video = $video;
     }
 
+    /**
+     * Scope a query to order by latest.
+     *
+     * @return \App\Video
+     */
     public function getOrderScope()
     { 
         return $this->video->orderByLatest();

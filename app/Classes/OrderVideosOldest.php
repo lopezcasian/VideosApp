@@ -12,6 +12,11 @@ class OrderVideosOldest implements OrderVideosInterface
         $this->video = $video;
     }
 
+    /**
+     * Scope a query to order by oldest.
+     *
+     * @return \App\Video
+     */
     public function getOrderScope()
     { 
         return $this->video->orderByOldest();

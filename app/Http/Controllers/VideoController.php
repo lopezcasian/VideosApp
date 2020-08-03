@@ -28,8 +28,8 @@ class VideoController extends Controller
     /**
      * Store video
      *
-     * @param App\Http\Requests\StoreVideo $request
-     * @return Response
+     * @param \App\Http\Requests\StoreVideo $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store( StoreVideo $request )
     {
@@ -101,6 +101,12 @@ class VideoController extends Controller
 
     }
 
+    /**
+     * Get video edit view
+     * 
+     * @param Video $video
+     * @return Redirect
+     */
     public function edit( Video $video )
     {
         $user = \Auth::user();
@@ -112,6 +118,15 @@ class VideoController extends Controller
         return redirect()->route( 'home' );
     }
 
+
+    /**
+     * Edit video
+     * 
+     * @param Video $video
+     * @param App\Http\Requests\UpdateVideo $request
+     *
+     * @return Redirect
+     */
     public function update( Video $video, UpdateVideo $request )
     {
         $video->title       = $request->input('title');
@@ -140,6 +155,14 @@ class VideoController extends Controller
             ));
     }
 
+    /**
+     * Search videos
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Interfaces\OrderVideosInterface $orderVideos
+     *
+     * @return View
+     */
     public function search( Request $request, OrderVideosInterface $orderVideos ){
         $stringToSearch = $request->get('search');
 
