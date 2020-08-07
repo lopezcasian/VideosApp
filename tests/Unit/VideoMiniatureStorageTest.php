@@ -12,7 +12,7 @@ use App\Classes\VideoMiniatureStorage;
 class VideoMiniatureStorageTest extends TestCase
 {
     
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Storage::fake( 'images' );

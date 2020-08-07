@@ -14,7 +14,7 @@ class FileVideoStorageTest extends TestCase
 {
     private $storage = null;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Storage::fake( 'videos' );

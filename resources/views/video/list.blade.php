@@ -12,11 +12,11 @@
                 </div>
             @endif
             <div class="data">
-                <h4 class="video-title"><a href="{{ route('videos.show', ['video_id' => $video->id]) }}">{{ $video->title }}</a></h4>
-                <p><a href="{{ route('users.show', ['user_id' => $video->user->id]) }}">{{ $video->user->name . ' ' . $video->user->surname }}</a>| {{ \FormatTime::LongTimeFilter($video->created_at)}}</p>
+                <h4 class="video-title"><a href="{{ route('videos.show', ['video' => $video->id]) }}">{{ $video->title }}</a></h4>
+                <p><a href="{{ route('users.show', ['user' => $video->user->id]) }}">{{ $video->user->name . ' ' . $video->user->surname }}</a>| {{ \FormatTime::LongTimeFilter($video->created_at)}}</p>
             </div>
             <!-- Action buttons -->
-            <a class="btn btn-success btn-sm" href="{{ route('videos.show', ['video_id' => $video->id]) }}">See</a>
+            <a class="btn btn-success btn-sm" href="{{ route('videos.show', ['video' => $video->id]) }}">See</a>
             @can( 'update', $video )
                 <a class="btn btn-warning btn-sm" href="{{ url('/videos/' . $video->id . '/edit') }}">Edit</a>
             @endcan

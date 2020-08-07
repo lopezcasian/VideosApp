@@ -141,7 +141,7 @@ class VideoController extends Controller
         }
 
         $videoOfRequest = $request->file('video');
-        if( $video_file ){
+        if( $videoOfRequest ){
             $oldVideo = $video->video_path;
             $video->video_path = $this->video_storage->save( $videoOfRequest );
 

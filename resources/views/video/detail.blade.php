@@ -17,7 +17,7 @@
             <div class="card video-data">
                 <div class="card-header">
                     <div class="card-title">
-                        Uploaded by <strong><a href="{{ route('users.show', ['user_id' => $video->user->id]) }}">{{ $video->user->name . ' ' . $video->user->surname }}</a></strong> {{ \FormatTime::LongTimeFilter($video->created_at)}}
+                        Uploaded by <strong><a href="{{ route('users.show', ['user' => $video->user->id]) }}">{{ $video->user->name . ' ' . $video->user->surname }}</a></strong> {{ \FormatTime::LongTimeFilter($video->created_at)}}
                     </div>
                 </div>
                 <div class="card-body">

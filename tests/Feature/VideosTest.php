@@ -22,7 +22,7 @@ class VideosTest extends TestCase
     private $video_file_disk_name = "videos";
     private $video_miniature_disk_name = "images";
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Storage::fake( $this->video_file_disk_name );
