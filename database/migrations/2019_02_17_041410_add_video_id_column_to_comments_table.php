@@ -27,7 +27,7 @@ class AddVideoIdColumnToCommentsTable extends Migration
     public function down()
     {
         Schema::table('comments', function (Blueprint $table) {
-            $table->dropForeign('comments_video_id_foreign');
+            $table->dropForeign(['video_id']);
             $table->dropColumn('video_id');
         });
     }

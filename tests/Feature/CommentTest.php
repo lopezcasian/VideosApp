@@ -32,7 +32,7 @@ class CommentTest extends TestCase
                 "video_id" => $video->id,
                 "body" => $comment->body
             ]);
-
+        
         $response->assertStatus( 302 );
         $response->assertRedirect( "/videos/" . $video->id );
 

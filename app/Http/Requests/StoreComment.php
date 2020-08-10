@@ -25,7 +25,7 @@ class StoreComment extends FormRequest
     {
         return [
             'body' => 'required|string|min:3|max:255',
-            'video_id' => 'required|numeric|exists:videos,id'
+            'video_id' => 'required|string|max:36|exists:videos,id'
         ];
     }
 }

@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Video extends Model
 {
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
+
     protected $table = 'videos';
 
     // Relación One To Many

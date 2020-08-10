@@ -27,7 +27,7 @@ class AddUserIdColumnToVideosTable extends Migration
     public function down()
     {
         Schema::table('videos', function (Blueprint $table) {
-            $table->dropForeign('videos_user_id_foreign');
+            $table->dropForeign(['user_id']);
             $table->dropColumn('user_id');
         });
     }

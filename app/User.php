@@ -10,6 +10,12 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
 
     /**
      * The attributes that are mass assignable.
