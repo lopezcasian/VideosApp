@@ -1,6 +1,6 @@
 # Videos App
 
-Foobar is a PHP webapp where you can create an user and upload, see and delete videos.
+Videos App is a PHP webapp where you can create an user and upload, see and delete videos.
 
 ## Installation
 
