@@ -300,5 +300,23 @@ class VideosTest extends TestCase
         $response->assertStatus( 200 );
     }
 
+    /**
+     * Test video soft delete
+     *
+     * @return void
+     */
+    public function testVideoSoftDelete()
+    {
+        $user = factory( User::class )->create();
+        $video = factory( Video::class )->create( [ "user_id" => $user->id ] );
 
+        $this->actingAs( $user )->delete( "/videos/$video->id" );
+
+        $this->assertSoftDeleted( "videos", [
+                "id" => $video->id,
+                "title" => $video->title
+            ]);
+
+        #TODO: Assert storage
+    }
 }

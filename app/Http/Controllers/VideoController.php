@@ -88,9 +88,6 @@ class VideoController extends Controller
         
         $video->comments()->delete();
 
-        $this->image_storage->destroy( $video->image );
-        $this->video_storage->destroy( $video->video_path );
-
         $video->delete();
 
         $message = array( 

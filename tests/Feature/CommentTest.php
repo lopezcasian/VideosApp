@@ -17,6 +17,16 @@ class CommentTest extends TestCase
     
     private $table_name = "comments";
 
+    private $video_file_disk_name = "videos";
+    private $video_miniature_disk_name = "images";
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        Storage::fake( $this->video_file_disk_name );
+        Storage::fake( $this->video_miniature_disk_name );
+    }
+
     /**
      * Store a comment.
      *
@@ -70,5 +80,26 @@ class CommentTest extends TestCase
                 "video_id" => $comment->video_id,
                 "user_id" => $user->id
             ] );
+    }
+
+    /**
+     * Test comment soft delete
+     *
+     * @return void
+     */
+    public function testCommentSoftDelete()
+    {
+        $user = factory( User::class )->create();
+        $video = factory( Video::class )->create();
+        $comment = factory( Comment::class )->create([
+                    "video_id" => $video->id,
+                    "user_id" => $user->id
+                ]);
+
+        $this->actingAs( $user )->delete( "/comments/$comment->id" );
+
+        $this->assertSoftDeleted( "comments", [
+                "id" => $comment->id,
+            ]);
     }
 }
