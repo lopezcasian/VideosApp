@@ -17,4 +17,5 @@ yarn-error.log
 composer.phar
 public/css/*
 public/js/*
-
+.editorconfig
+db
