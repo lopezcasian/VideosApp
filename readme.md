@@ -19,7 +19,6 @@ Use artisan to install the project resources.
 ```artisan
 php artisan key:generate
 php artisan migrate
-php artisan serve
 ```
 
 ## Contributing
