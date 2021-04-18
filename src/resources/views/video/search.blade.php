@@ -14,9 +14,9 @@
                     <input type="hidden" name="search" value="{{ $search }}">
 	        		<label for="order">Order by</label>
 	        		<select name="order" class="form-control">
-	        			<option value="new">Newest</option>
-	        			<option value="old">Oldest</option>
-	        			<option value="atoz">A to Z</option>
+	        			<option value="new" {{ $order == "new" ? "selected":"" }}>Newest</option>
+	        			<option value="old" {{ $order == "old" ? "selected":"" }}>Oldest</option>
+	        			<option value="atoz" {{ $order == "atoz" ? "selected":"" }}>A to Z</option>
 	        		</select>
 	        		<input type="submit" class="btn-filter btn btn-sm btn-primary" />
 	        	</form>

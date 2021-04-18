@@ -3,13 +3,12 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Http\Controller\VideoController;
 use App\Interfaces\OrderVideosInterface;
 
-use App\Classes\OrderVideosLatest;
-use App\Classes\OrderVideosOldest;
-use App\Classes\OrderVideosTitleAsc;
-use App\Classes\OrderVideosTitleDesc;
+use App\Classes\VideoOrdering\OrderByLatest;
+use App\Classes\VideoOrdering\OrderByOldest;
+use App\Classes\VideoOrdering\OrderByTitleAsc;
+use App\Classes\VideoOrdering\OrderByTitleDesc;
 
 use App\Video;
 
@@ -28,26 +27,26 @@ class VideosOrderServiceProvider extends ServiceProvider
     /**
      * Register services.
      *
+     * @param string $attrs 
      * @return void
      */
     public function register()
     {
-        $this->app->bind( OrderVideosInterface::class, function ($app) {
-            $order = $this->app->request->get("order");
-
+        $this->app->bind( OrderVideosInterface::class, function ( $app, $attrs ) {
+            $order = $attrs['order'];
             if( $order == "new" ) {
-                return new OrderVideosLatest( new Video );
+                return new OrderByLatest();
             }
 
             if( $order == "old" ) {
-                return new OrderVideosOldest( new Video );
+                return new OrderByOldest();
             }
 
             if( $order == "atoz" ) {
-                return new OrderVideosTitleAsc( new Video );
+                return new OrderByTitleAsc();
             }
 
-            return new OrderVideosLatest( new Video );
+            return new OrderByLatest();
         });
     }
 }

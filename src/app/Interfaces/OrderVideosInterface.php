@@ -4,5 +4,5 @@ namespace App\Interfaces;
 
 interface OrderVideosInterface
 {
-    public function getOrderScope();
+    public function order( $query );
 }

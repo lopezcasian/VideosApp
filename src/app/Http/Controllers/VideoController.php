@@ -156,25 +156,24 @@ class VideoController extends Controller
      * Search videos
      * 
      * @param \Illuminate\Http\Request $request
-     * @param \App\Interfaces\OrderVideosInterface $orderVideos
      *
      * @return View
      */
-    public function search( Request $request, OrderVideosInterface $orderVideos ){
+    public function search( Request $request ){
         $stringToSearch = $request->get('search');
+        $order = $request->get('order');
 
         if( empty( $stringToSearch ) ){
             return redirect()->route('home');
         }
-
-        $orderScope = $orderVideos->getOrderScope();
-
-        $videos = $orderScope->filterByTitle( $stringToSearch )
-                    ->paginate(5);
-
+        
+        $videos = Video::filterByTitle( $stringToSearch )
+            ->order( $order )->paginate(5);
+        
         return view('video.search', array(
                 'videos' => $videos,
-                'search' => $stringToSearch
+                'search' => $stringToSearch,
+                'order' => $order
             ));
     }
 }

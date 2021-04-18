@@ -285,19 +285,45 @@ class VideosTest extends TestCase
     }
 
     /**
-     * Search and order videos
+     * Search videos
      *
      * @return void
      */
-    public function testSearchAndOrderVideos()
+    public function testSearchVideos()
     {
         $videos = factory( Video::class, 15 )->create();
 
         $response = $this->post("/videos/search", [
-                "search" => $videos[0]->title
+                "search" => $videos[0]->title,
             ]);
-
+        
+        $response->assertSee( $videos[0]->title );
         $response->assertStatus( 200 );
+    }
+
+    /**
+     * Order videos
+     * 
+     * @return void 
+     */
+    public function testOrderVideos(){
+        $videos = factory( Video::class, 10 )->create([
+            "title" => "Esteban"
+        ]);
+
+        $response = $this->post("/videos/search", [
+            "search" => $videos[0]->title,
+            "order" => "old"
+        ]);
+        
+        
+        $response->assertStatus( 200 );
+        $response->assertViewHas( 'videos' );
+
+        $videos = Video::where( 'title', 'LIKE', '%' . $videos[0]->title . '%' )->oldest()->paginate(5);
+        $content = $response->getOriginalContent()->getData()['videos'];
+        
+        $this->assertEquals( $videos[0]->created_at, $content[0]->created_at );
     }
 
     /**

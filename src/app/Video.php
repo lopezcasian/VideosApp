@@ -82,4 +82,18 @@ class Video extends Model
     {
         return $query->latest();
     }
+
+    /**
+     * SOLID principles ordering.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $ordering Ordering type
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrder( $query, $ordering )
+    {
+        $order_class = \App::makeWith( 'App\\Interfaces\\OrderVideosInterface', [ 'order' => $ordering ] );
+
+        return $order_class->order( $query );
+    }
 }
