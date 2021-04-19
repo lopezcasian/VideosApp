@@ -17,16 +17,6 @@ class CommentTest extends TestCase
     
     private $table_name = "comments";
 
-    private $video_file_disk_name = "videos";
-    private $video_miniature_disk_name = "images";
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        Storage::fake( $this->video_file_disk_name );
-        Storage::fake( $this->video_miniature_disk_name );
-    }
-
     /**
      * Store a comment.
      *
@@ -55,32 +45,6 @@ class CommentTest extends TestCase
 
     #TODO: Store comment to an un-existent video
     #TODO: Store comment with invalid data.
-
-    /**
-     * Delete a comment
-     *
-     * @return void
-     */
-    public function testDeleteAComment()
-    {
-        $user = factory( User::class )->create();
-        $comment = factory( Comment::class )->create([
-                "user_id" => $user->id
-            ]);
-
-        $response = $this->actingAs( $user )
-                            ->delete( "/comments/" . $comment->id );
-
-        $response->assertStatus( 302 );
-        $response->assertRedirect( "/videos/" . $comment->video_id );
-
-        $this->assertDatabaseMissing( "comments", [
-                "id" => $comment->id,
-                "body" => $comment->body,
-                "video_id" => $comment->video_id,
-                "user_id" => $user->id
-            ] );
-    }
 
     /**
      * Test comment soft delete

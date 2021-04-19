@@ -19,16 +19,14 @@ class VideosTest extends TestCase
     use DatabaseTransactions;
 
     private $table = "videos";
-    private $video_file_disk_name = "videos";
-    private $video_miniature_disk_name = "images";
 
     public function setUp(): void
     {
         parent::setUp();
-        Storage::fake( $this->video_file_disk_name );
-        Storage::fake( $this->video_miniature_disk_name );
-    }
 
+        Storage::fake('videos');
+        Storage::fake('images');
+    }
     /**
      * Store video test
      *
@@ -104,9 +102,11 @@ class VideosTest extends TestCase
      */
     public function testGetVideo()
     {
-        $video = factory( Video::class )->create();
-
-        $response = $this->get( '/videos/file/' . $video->video_path );
+        $file_storage = new FileVideoStorage( Storage::disk('videos') );
+        
+        $video = $file_storage->save( UploadedFile::fake()->create( 'video_unit_test.mp4', 10000 ) );
+        //dd( $video );
+        $response = $this->get( '/videos/file/' . $video );
         
         $response->assertStatus(200);
     }
@@ -130,9 +130,11 @@ class VideosTest extends TestCase
      */
     public function testGetVideoMiniature()
     {
-        $video = factory( Video::class )->create();
+        $file_storage = new VideoMiniatureStorage( Storage::disk('images') );
         
-        $response = $this->get( '/videos/miniature/' . $video->image );
+        $image = $file_storage->save( UploadedFile::fake()->image( 'miniature_unit_test.jpg' ) );
+        
+        $response = $this->get( '/videos/miniature/' . $image );
         
         $response->assertStatus(200);
     }
@@ -250,38 +252,6 @@ class VideosTest extends TestCase
                 "video_path" => $video->video_path,
                 "image" => $video->image
             ]);
-    }
-
-
-    /**
-     * Delete a video and relations
-     *
-     * @return void
-     */
-    public function testDeleteVideo()
-    {
-        $user = factory( User::class )->create();
-        $video = factory( Video::class )->create([
-                    "user_id" => $user->id
-                ]);
-        $comments = factory( Comment::class, 3 )->create([
-                "video_id" => $video->id
-            ]);
-
-        $response = $this->actingAs( $user )
-                            ->delete( "/videos/$video->id");
-
-        $response->assertStatus( 302 );
-
-        $this->assertDatabaseMissing("comments", [
-                "video_id" => $video->id
-            ]);
-
-        $this->assertDatabaseMissing("videos", [
-                "id" => $video->id
-            ]);
-
-        # TODO: Assert storage
     }
 
     /**

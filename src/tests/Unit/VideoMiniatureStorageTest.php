@@ -17,7 +17,7 @@ class VideoMiniatureStorageTest extends TestCase
         parent::setUp();
         Storage::fake( 'images' );
 
-        $this->storage = Storage::disk( 'videos' );
+        $this->storage = Storage::disk( 'images' );
     }
 
     /**
